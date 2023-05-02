@@ -12,6 +12,7 @@ cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure:true
 });
 
 //get all posts
@@ -29,11 +30,12 @@ router.route("/").post(async (req, res) => {
   try {
     const { name, prompt, photo } = req.body;
     const photoUrl = await cloudinary.uploader.upload(photo,{timeout:300000}, function(error,result){});
-    console.log(photoUrl.url);
+    const photoUrl1 = photoUrl.url.substring(0,4)+'s'+photoUrl.url.substring(4);
+    console.log(photoUrl1);
     const newPost = await Post.create({
       name,
       prompt,
-      photo: photoUrl.url,
+      photo: photoUrl1,
     });
 
     res.status(201).json({ success: true, data: newPost });
